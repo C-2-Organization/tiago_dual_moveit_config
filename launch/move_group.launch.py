@@ -87,8 +87,14 @@ def start_move_group(context, *args, **kwargs):
             "tiago_dual.srdf.xacro",
         )
     )
-
-    srdf_input_args = {
+    
+    urdf_file_path = os.path.join(
+        get_package_share_directory("tiago_dual_description"),
+        "robots",
+        "tiago_dual.urdf.xacro",
+    )
+    
+    xacro_args = {
         "arm_type_right": arm_type_right,
         "arm_type_left": arm_type_left,
         "end_effector_right": end_effector_right,
@@ -113,7 +119,8 @@ def start_move_group(context, *args, **kwargs):
     # The robot description is read from the topic /robot_description if the parameter is empty
     moveit_config = (
         MoveItConfigsBuilder('tiago_dual')
-        .robot_description_semantic(file_path=srdf_file_path, mappings=srdf_input_args)
+        .robot_description(file_path=urdf_file_path, mappings=xacro_args)
+        .robot_description_semantic(file_path=srdf_file_path, mappings=xacro_args)
         .robot_description_kinematics(file_path=os.path.join('config', 'kinematics_kdl.yaml'))
         .trajectory_execution(moveit_simple_controllers_path)
         .joint_limits(file_path=os.path.join('config', 'joint_limits.yaml'))
