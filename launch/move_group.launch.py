@@ -88,10 +88,16 @@ def start_move_group(context, *args, **kwargs):
         )
     )
     
+    # urdf_file_path = os.path.join(
+    #     get_package_share_directory("tiago_dual_description"),
+    #     "robots",
+    #     "tiago_dual.urdf.xacro",
+    # )
+    
     urdf_file_path = os.path.join(
-        get_package_share_directory("tiago_dual_description"),
-        "robots",
-        "tiago_dual.urdf.xacro",
+        get_package_share_directory("tiago_isaac_ros2_control"),
+        "urdf",
+        "tiago_dual_manipulation.urdf.xacro",
     )
     
     xacro_args = {
