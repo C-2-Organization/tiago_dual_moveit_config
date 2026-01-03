@@ -30,6 +30,9 @@ from tiago_dual_description.tiago_dual_launch_utils import get_tiago_dual_hw_suf
 from dataclasses import dataclass
 from ament_index_python.packages import get_package_share_directory
 
+from launch.substitutions import Command
+from launch_ros.parameter_descriptions import ParameterValue
+
 
 @dataclass(frozen=True)
 class LaunchArguments(LaunchArgumentsBase):
@@ -86,6 +89,20 @@ def start_move_group(context, *args, **kwargs):
             "config", "srdf",
             "tiago_dual.srdf.xacro",
         )
+    )
+    
+    srdf_xml = ParameterValue(
+        Command([
+            "xacro", " ", str(srdf_file_path),
+            " arm_type_right:=", arm_type_right,
+            " arm_type_left:=", arm_type_left,
+            " end_effector_right:=", end_effector_right,
+            " end_effector_left:=", end_effector_left,
+            " ft_sensor_right:=", ft_sensor_right,
+            " ft_sensor_left:=", ft_sensor_left,
+            " base_type:=", base_type,
+        ]),
+        value_type=str,
     )
     
     # urdf_file_path = os.path.join(
@@ -153,6 +170,7 @@ def start_move_group(context, *args, **kwargs):
     move_group_params = [
         moveit_config.to_dict(),
         move_group_configuration,
+        {"robot_description_semantic": srdf_xml},
     ]
 
     # Start the actual move_group node/action server
